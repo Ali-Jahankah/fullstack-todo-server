@@ -3,9 +3,11 @@ import express, {
   Request,
   Response,
 } from "express";
-
+import { TasksController } from "../controllers/tasksController";
 export const tasksRouter: Router = express.Router();
 
 tasksRouter.get("/", (req: Request, res: Response) => {
-  res.send("Get all the tasks");
+  const controller = new TasksController();
+  const allTasks = controller.getAll();
+  res.send(allTasks);
 });

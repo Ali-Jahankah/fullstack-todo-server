@@ -1,5 +1,9 @@
 import { tasksRouter } from "./src/routes/tasks.routes";
-import express, { Express } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+} from "express";
 import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import bodyParser from "body-parser";
@@ -10,9 +14,9 @@ dotenv.config();
 app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT;
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Server is running");
-// });
+app.get("/", (req: Request, res: Response) => {
+  res.send("Server is running");
+});
 app.use("/tasks", tasksRouter);
 export const AppDataSource = new DataSource({
   type: "mysql",
