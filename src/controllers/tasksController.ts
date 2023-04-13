@@ -1,8 +1,12 @@
 import { validationResult } from "express-validator";
 import { AppDataSource } from "./../../index";
 import { Tasks } from "../entities/tasks/Tasks.entity";
-import { instanceToPlain } from "class-transformer";
+import {
+  instanceToPlain,
+  plainToInstance,
+} from "class-transformer";
 import { Request, Response } from "express";
+import { UpdateResult } from "typeorm";
 class TasksController {
   public async getAll(
     req: Request,
@@ -33,9 +37,73 @@ class TasksController {
   ): Promise<Response> {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors });
+      return res
+        .status(400)
+        .json({ errors: errors.array() });
     }
-    return res.status(200);
+    try {
+      const newTask: Tasks = new Tasks();
+
+      newTask.title = req.body.title;
+      newTask.description = req.body.description;
+      newTask.date = req.body.date;
+      newTask.status = req.body.status;
+      newTask.level = req.body.level;
+      const createdTask = await AppDataSource.getRepository(
+        Tasks,
+      ).save(newTask);
+      const plainTask = instanceToPlain(createdTask);
+      return res.status(201).json({
+        data: plainTask,
+        msg: "New task created successfuly!",
+      });
+    } catch (error) {
+      return res
+        .status(400)
+        .json({ msg: "Internal server error!" });
+    }
+  }
+  public async updateTask(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(400)
+        .json({ errors: errors.array() });
+    }
+    let task: Tasks | null;
+    try {
+      task = await AppDataSource.getRepository(
+        Tasks,
+      ).findOne({
+        where: {
+          id: req.body.id,
+        },
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ msg: "Internal server error!" });
+    }
+    if (!task) {
+      return res.status(404).json({
+        msg: "Task with provided id is not found!",
+      });
+    }
+    const updatedTask: UpdateResult =
+      await AppDataSource.getRepository(Tasks).update(
+        req.body.id,
+        plainToInstance(Tasks, { status: req.body.status }),
+      );
+    const plainUpdatedTask = instanceToPlain(
+      updatedTask,
+    ) as UpdateResult;
+    return res.status(200).json({
+      msg: `Task with the id << ${req.body.id} >> succesfully update!`,
+      data: plainUpdatedTask,
+    });
   }
 }
 
