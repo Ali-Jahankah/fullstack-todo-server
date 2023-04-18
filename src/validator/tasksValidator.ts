@@ -44,8 +44,8 @@ export const updateValidator = [
     .isEmpty()
     .trim()
     .isString()
-    .isIn(["New", "In Progress", "Done"])
+    .isIn(["New", "In Progress", "Completed"])
     .withMessage(
-      "Value must be one of these :New, In Progress or Done",
+      "Value must be one of these :New, In Progress or Completed",
     ),
 ];
