@@ -27,7 +27,7 @@ export const tasksValidator: ValidationChain[] = [
     .not()
     .isEmpty()
     .withMessage("Date must not be empty")
-    .isIn(["New", "In Progress", "Done"]),
+    .isIn(["New", "In Progress", "Completed"]),
   body("level")
     .isString()
     .withMessage("must be a a plain text")
