@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 4001;
 app.get("/api", (req: Request, res: Response) => {
   res.send("Server is running");
 });
-app.use("/tasks", tasksRouter);
+app.use("/api/tasks", tasksRouter);
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: "postgres://vpfejssl:qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG@rogue.db.elephantsql.com/vpfejssl",
