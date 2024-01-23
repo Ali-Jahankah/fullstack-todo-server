@@ -9,7 +9,6 @@ import { Tasks } from "./src/entities/tasks/Tasks.entity";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import serverless from "serverless-http";
 import { tasksRouter } from "./src/routes/tasks.routes";
 
 const app: Express = express();
@@ -17,7 +16,7 @@ dotenv.config();
 app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT || 4001;
-tasksRouter.get("/api", (req: Request, res: Response) => {
+app.get("/api", (req: Request, res: Response) => {
   res.send("Server is running");
 });
 app.use("/tasks", tasksRouter);
@@ -43,5 +42,4 @@ AppDataSource.initialize()
   .catch((err) => {
     console.log(err, "Error in databases");
   });
-  export const handler = serverless(app);
 
