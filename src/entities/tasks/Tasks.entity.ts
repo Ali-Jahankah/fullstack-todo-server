@@ -1,8 +1,9 @@
 import {
   Column,
-  PrimaryGeneratedColumn,
   Entity,
+  PrimaryGeneratedColumn,
 } from "typeorm";
+
 import { Level } from "../../enums/Level.enum";
 import { Status } from "../../enums/Status.enum";
 @Entity()
@@ -16,7 +17,7 @@ export class Tasks {
   title: string;
 
   @Column({
-    type: "longtext",
+    type: "text",
   })
   description: string;
 
