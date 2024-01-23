@@ -1,13 +1,15 @@
 import express, {
   Express,
   Request,
-  Response
+  Response,
+  Router
 } from "express";
 
 import { tasksRouter } from "../../src/routes/tasks.routes";
 
+const router = Router()
 const api: Express = express();
-tasksRouter.get("/api", (req: Request, res: Response) => {
+router.get("/api", (req: Request, res: Response) => {
   res.send("Server is running");
 });
 api.use("/tasks", tasksRouter);
