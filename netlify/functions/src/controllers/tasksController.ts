@@ -8,30 +8,34 @@ import { AppDataSource } from "../../api";
 import { Tasks } from "../entities/tasks/Tasks.entity";
 import { UpdateResult } from "typeorm";
 import { validationResult } from "express-validator";
+
 class TasksController {
   public async getAll(
     req: Request,
     res: Response,
   ): Promise<Response> {
     try {
-      let allTasks: Tasks[] = [];
-      allTasks = await AppDataSource.getRepository(
-        Tasks,
-      ).find({
-        order: {
-          date: "ASC",
-        },
+      const allTasks: Tasks[] = await AppDataSource.getRepository(Tasks).find({
+        order: { date: "ASC" },
       });
-      allTasks = instanceToPlain(allTasks) as Tasks[];
-      return res
-        .status(200)
-        .json({ msg: "Getting all tasks", data: allTasks });
+  
+      const plainTasks = instanceToPlain(allTasks) as Tasks[];
+  
+      return res.status(200).json({
+        success: true,
+        data: plainTasks,
+        message: "Getting all tasks",
+      });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ msg: "Internal server error", data: [] });
+      console.error("Error getting all tasks:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        data: []
+      });
     }
   }
+  
   public async newTask(
     req: Request,
     res: Response,
@@ -61,7 +65,7 @@ class TasksController {
     } catch (error) {
       return res
         .status(400)
-        .json({ msg: "Internal server error!" });
+        .json({ msg: "Internal server error!" + error});
     }
   }
   public async updateTask(
@@ -86,7 +90,7 @@ class TasksController {
     } catch (error) {
       return res
         .status(500)
-        .json({ msg: "Internal server error!" });
+        .json({ msg: "Internal server error!" + error});
     }
     if (!task) {
       return res.status(404).json({
