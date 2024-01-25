@@ -1,12 +1,13 @@
-import { validationResult } from "express-validator";
-import { AppDataSource } from "./../../index";
-import { Tasks } from "../entities/tasks/Tasks.entity";
+import { Request, Response } from "express";
 import {
   instanceToPlain,
   plainToInstance,
 } from "class-transformer";
-import { Request, Response } from "express";
+
+import { AppDataSource } from "./../../index";
+import { Tasks } from "../entities/tasks/Tasks.entity";
 import { UpdateResult } from "typeorm";
+import { validationResult } from "express-validator";
 class TasksController {
   public async getAll(
     req: Request,
@@ -28,7 +29,7 @@ class TasksController {
     } catch (error) {
       return res
         .status(500)
-        .json({ msg: "Internal server error", data: [] });
+        .json({ msg: "Internal server error: " + error, data: [] });
     }
   }
   public async newTask(
@@ -60,7 +61,7 @@ class TasksController {
     } catch (error) {
       return res
         .status(400)
-        .json({ msg: "Internal server error!" });
+        .json({ msg: "Internal server error: " + error });
     }
   }
   public async updateTask(
@@ -85,7 +86,7 @@ class TasksController {
     } catch (error) {
       return res
         .status(500)
-        .json({ msg: "Internal server error!" });
+        .json({ msg: "Internal server error: " + error });
     }
     if (!task) {
       return res.status(404).json({
