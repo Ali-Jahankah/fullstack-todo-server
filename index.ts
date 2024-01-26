@@ -21,12 +21,8 @@ app.get("/api", (req: Request, res: Response) => {
 });
 app.use("/api/tasks", tasksRouter);
 export const AppDataSource = new DataSource({
-  type: "postgres",
-  url: "postgres://vpfejssl:qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG@rogue.db.elephantsql.com/vpfejssl",
-  // port: Number(process.env.DATABASE_PORT) || 5432,
-  // password: process.env.DATABASE_PASSWORD || 'qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG',
-  // username: process.env.DATABASE_USERNAME || 'vpfejssl',
-  // database: process.env.DATABASE_NAME || 'vpfejssl',
+  type: process.env.DB_TYPE as any || 'postgres',
+  url: process.env.DB_CONNECTION_URL,
   synchronize: true,
   entities: [Tasks]
 });
