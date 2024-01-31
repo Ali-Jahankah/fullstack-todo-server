@@ -19,7 +19,7 @@ jobs:
           SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           echo "$SSH_KEY" > private_key && chmod 400 private_key
-          ssh -i private_key "${EC2_USERNAME}@${EC2_HOST}"
+          ssh -i "private_key" ${EC2_USERNAME}@${EC2_HOST}
           cd fullstack-todo-server
           git checkout deploy && git fetch --all
           git pull origin deploy &&
