@@ -1,0 +1,29 @@
+name: GitHub Actions for Full-Stack front end
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@master
+      - name: connect to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          echo "$SSH_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_HOST}
+          cd fullstack-todo-server
+          git checkout deploy && git fetch --all
+          git pull origin deploy &&
+          npm i &&
+          npm run build &&
+          pm2 stop dist/index.js
+          pm2 start dist/index.js --name fullstack-todo-server --env production
