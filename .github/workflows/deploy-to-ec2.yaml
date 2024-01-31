@@ -31,6 +31,5 @@ jobs:
         npm install &&
         npm run build &&
         pm2 stop dist/index.js &&
-        pm2 start dist/index.js --name fullstack-todo-server --env production &&
-        pm2 logs
+        pm2 start dist/index.js --name fullstack-todo-server --env production
         "
