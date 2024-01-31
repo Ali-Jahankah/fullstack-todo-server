@@ -30,7 +30,7 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize()
   .then(() => {
     console.log(
-      "Database is running",
+      "Database is runninggggg",
     );
     app.listen(PORT, () => {
       console.log(`server is running on port ${PORT}`);
