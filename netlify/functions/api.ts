@@ -16,6 +16,7 @@ const app: Express = express();
   dotenv.config();
   app.use(bodyParser.json());
   app.use(cors());
+  console.log(process.env.PORT);
   app.get("/api", (req: Request, res: Response) => {
     res.send("Server is running");
   });
