@@ -19,7 +19,13 @@ jobs:
           EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
           EC2_URL: $EC2_URL
     - name: Connect to EC2
-      run: ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL
-    - name: run scripts
-      run: ls && cd fullstack-todo-server &&
-           git checkout deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL "\
+        cd fullstack-todo-server &&
+        git checkout deploy &&
+        git pull origin deploy &&
+        git pull &&
+        npm install &&
+        npm run build &&
+        pm2 restart your-app
+        "
