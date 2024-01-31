@@ -13,6 +13,10 @@ jobs:
       EC2_URL: ${{ secrets.EC2_HOST }}
       EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
     steps:
+    - name: get repo
+      uses: actions/checkout@v2
+      with:
+        ref: deploy
     - name: Setup SSH for EC2
       uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
       with:
@@ -22,7 +26,6 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL "\
         cd fullstack-todo-server &&
-        git checkout deploy &&
         git pull origin deploy &&
         git pull &&
         npm install &&
