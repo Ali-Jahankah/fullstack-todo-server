@@ -16,14 +16,13 @@ const app: Express = express();
   dotenv.config();
   app.use(bodyParser.json());
   app.use(cors());
-  console.log(process.env.PORT);
   app.get("/api", (req: Request, res: Response) => {
     res.send("Server is running");
   });
   app.use("/api/tasks", tasksRouter);
   export const AppDataSource = new DataSource({
-    type: "postgres",
-    url: "postgres://vpfejssl:qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG@rogue.db.elephantsql.com/vpfejssl",
+    type: process.env.DB_TYPE as any,
+    url: process.env.DB_CONNECTION_URL,
     // port: Number(process.env.DATABASE_PORT) || 5432,
     // password: process.env.DATABASE_PASSWORD || 'qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG',
     // username: process.env.DATABASE_USERNAME || 'vpfejssl',
