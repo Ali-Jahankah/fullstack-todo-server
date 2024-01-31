@@ -1,31 +1,41 @@
-name: GitHub Actions for Full-Stack front end
+name: fullstack todo server flow
 
 on:
   push:
-    branches:
+    branches: 
       - deploy
 
+env:
+  AWS_REGION: us-east-1a
+  REMOTE_HOST: "ec2-44-204-37-122.compute-1.amazonaws.com"
+  REMOTE_USER: "ec2-user"
+
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
 
-    env:
-      EC2_HOST: ${{ secrets.EC2_HOST }}
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up SSH key
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+      - name: Configure SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/github-actions-key
+          chmod 600 ~/.ssh/github-actions-key
+          cat >>~/.ssh/config <<END
+          Host ec2
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/github-actions-key
+            StrictHostKeyChecking no
+          END
         env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${EC2_HOST} 'cd /path/to/your/app && git pull origin deploy && npm install && npm run build && pm2 restart your-app'
+          SSH_HOST: ${{ env.EC2_HOST }}
+          SSH_USER: ${{ env.EC2_USERNAME }}
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }} 
+      - name: List home directory
+        run: ssh ec2 'ls -la'
