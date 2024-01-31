@@ -1,41 +1,22 @@
-name: fullstack todo server flow
+name: Fullstack-todo server flow
 
+# Trigger deployment only on push to master branch
 on:
   push:
-    branches: 
+    branches:
       - deploy
 
-env:
-  AWS_REGION: us-east-1a
-  REMOTE_HOST: "ec2-44-204-37-122.compute-1.amazonaws.com"
-  REMOTE_USER: "ec2-user"
-
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
-  test:
+  deploy:
+    name: Deploy to EC2 on master branch push
     runs-on: ubuntu-latest
 
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v3
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/github-actions-key
-          chmod 600 ~/.ssh/github-actions-key
-          cat >>~/.ssh/config <<END
-          Host ec2
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/github-actions-key
-            StrictHostKeyChecking no
-          END
+      - name: Checkout the files
+        uses: actions/checkout@v2
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
         env:
-          SSH_HOST: ${{ env.EC2_HOST }}
-          SSH_USER: ${{ env.EC2_USERNAME }}
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }} 
-      - name: List home directory
-        run: ssh ec2 'ls -la'
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.EC2_HOST }}
+          REMOTE_USER: ${{ secrets.EC2_USERNAME }}
