@@ -23,10 +23,10 @@ jobs:
         username: ${{ secrets.DOCKER_EMAIL }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build Docker Image
-      run: docker build -t fullstack-server:latest .
+      run: docker build -t fullstack-server .
     
     - name: Tag container
-      run: docker tag fullstack-server:latest uaral/full-stack-server:latest
+      run: docker tag fullstack-server uaral/full-stack-server:latest
 
     - name: Push Docker Image
       run: docker push uaral/full-stack-server:latest
