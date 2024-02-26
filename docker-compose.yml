@@ -1,0 +1,12 @@
+services:
+  fullstack-server:
+    image: node:18-alpine
+    command: sh -c "npm i && npm run dev"
+    ports:
+      - 4001:4001
+    working_dir: /fullstack-todo-server
+    volumes:
+      - ./:/fullstack-todo-server
+    environment:
+        DB_TYPE: postgres
+        DB_CONNECTION_URL: postgres://vpfejssl:qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG@rogue.db.elephantsql.com/vpfejssl

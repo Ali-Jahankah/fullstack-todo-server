@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT || 4001;
 app.get("/api", (req: Request, res: Response) => {
-  res.send("Server is running");
+  res.send("Server is running on Docker image 🐙\m/");
 });
 app.use("/api/tasks", tasksRouter);
 export const AppDataSource = new DataSource({
@@ -30,7 +30,7 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize()
   .then(() => {
     console.log(
-      "Database is runninggggg",
+      "Database is running",
     );
     app.listen(PORT, () => {
       console.log(`server is running on port ${PORT}`);
