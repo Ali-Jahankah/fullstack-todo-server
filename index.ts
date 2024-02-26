@@ -23,7 +23,7 @@ app.get("/api", (req: Request, res: Response) => {
 app.use("/api/tasks", tasksRouter);
 export const AppDataSource = new DataSource({
   type: process.env.DB_TYPE as any || 'postgres',
-  url: process.env.DB_CONNECTION_URL,
+  url: 'postgres://vpfejssl:qWVDOYQev2sX88lxgw7FXmXuX_lNEbhG@rogue.db.elephantsql.com/vpfejssl',
   synchronize: true,
   entities: [Tasks]
 });
