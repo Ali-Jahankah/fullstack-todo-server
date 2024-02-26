@@ -42,5 +42,5 @@ jobs:
         docker pull uaral/full-stack-server:latest &&
         docker stop full-stack-server || true &&
         docker rm full-stack-server || true &&
-        docker run -d --name full-stack-server -p 80:80 uaral/full-stack-server:latest
+        docker run -d --name full-stack-server -p 80:4001 uaral/full-stack-server:latest
         "
