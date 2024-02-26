@@ -11,13 +11,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { tasksRouter } from "./src/routes/tasks.routes";
 
+console.log('test');
 const app: Express = express();
 dotenv.config();
 app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT || 4001;
 app.get("/api", (req: Request, res: Response) => {
-  res.send("Server is running");
+  res.send("Server is running on Docker image 🐙\m/");
 });
 app.use("/api/tasks", tasksRouter);
 export const AppDataSource = new DataSource({

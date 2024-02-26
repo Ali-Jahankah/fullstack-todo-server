@@ -1,4 +1,4 @@
-name: GitHub Actions for Full-Stack front end
+name: Fullstack-todo server flow
 
 on:
   push:
@@ -6,24 +6,38 @@ on:
       - deploy
 
 jobs:
-  deploy:
+  setup-ssh:
     runs-on: ubuntu-latest
-
+    env:
+      EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+      EC2_URL: ${{ secrets.EC2_HOST }}
+      EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
     steps:
-      - name: checkout repository
-        uses: actions/checkout@master
-      - name: connect to EC2
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-        run: |
-          echo "$SSH_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_HOST}
-          cd fullstack-todo-server
-          git checkout deploy && git fetch --all
-          git pull origin deploy &&
-          npm i &&
-          npm run build &&
-          pm2 stop dist/index.js
-          pm2 start dist/index.js --name fullstack-todo-server --env production
+    - name: get repo
+      uses: actions/checkout@v2
+      with:
+        ref: deploy
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_EMAIL }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build Docker Image
+      run: docker build -t uaral/fullstack-todo-server:latest .
+
+    - name: Push Docker Image
+      run: docker push -t uaral/full-stack-server:latest
+    
+    - name: Setup SSH for EC2
+      uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
+      with:
+          EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
+          EC2_URL: $EC2_URL
+    - name: Connect to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL "\
+        docker pull uaral/fullstack-todo-server:latest &&
+        docker stop fullstack-todo-server || true &&
+        docker rm fullstack-todo-server }} true &&
+        docker run -d --name fullstack-todo-server -p 80:80 uaral/fullstack-todo-server:latest
+        "
