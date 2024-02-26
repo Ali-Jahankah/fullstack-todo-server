@@ -23,7 +23,10 @@ jobs:
         username: ${{ secrets.DOCKER_EMAIL }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build Docker Image
-      run: docker build -t uaral/fullstack-todo-server:latest .
+      run: docker build -t fullstack-server:latest .
+    
+    - name: Tag container
+      run: docker tag fullstack-server:latest uaral/full-stack-server:latest
 
     - name: Push Docker Image
       run: docker push uaral/full-stack-server:latest
@@ -36,8 +39,8 @@ jobs:
     - name: Connect to EC2
       run: |
         ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_URL "\
-        docker pull uaral/fullstack-todo-server:latest &&
-        docker stop fullstack-todo-server || true &&
-        docker rm fullstack-todo-server }} true &&
-        docker run -d --name fullstack-todo-server -p 80:80 uaral/fullstack-todo-server:latest
+        docker pull uaral/full-stack-server:latest &&
+        docker stop full-stack-server || true &&
+        docker rm full-stack-server || true &&
+        docker run -d --name full-stack-server -p 80:80 uaral/full-stack-server:latest
         "
