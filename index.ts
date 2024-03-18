@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(cors());
 const PORT = process.env.PORT || 4001;
 app.get("/api", (req: Request, res: Response) => {
-  res.send("Server is running on Docker image 🐙🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳");
+  res.send("Server is running");
 });
 app.use("/api/tasks", tasksRouter);
 export const AppDataSource = new DataSource({
