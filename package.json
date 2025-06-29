@@ -25,7 +25,7 @@
     "nodemon": "^2.0.22",
     "prettier": "2.7.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
@@ -44,7 +44,7 @@
     "typeorm": "^0.3.13"
   },
   "engines": {
-    "node": "20.x",
-    "npm": ">=11.1.0"
+    "node": ">=20.x",
+    "npm": ">=11.0.0"
   }
 }
